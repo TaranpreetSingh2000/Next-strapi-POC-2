@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_revenue_revenues",
+  "info": {
+    "displayName": "Revenue",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "suptext": {
+      "type": "string"
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "image": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    }
+  }
+}

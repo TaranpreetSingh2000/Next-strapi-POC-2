@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepages",
+  "info": {
+    "singularName": "homepage",
+    "pluralName": "homepages",
+    "displayName": "HomePage",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "BannerTeaser": {
+      "type": "component",
+      "repeatable": true,
+      "component": "banner.banner"
+    },
+    "Revenue": {
+      "type": "component",
+      "repeatable": true,
+      "component": "revenue.revenue"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_revenue_revenue_imgs",
+  "info": {
+    "displayName": "revenueImg"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "allowedTypes": [
+        "images",
+        "files"
+      ],
+      "type": "media",
+      "multiple": true
+    }
+  }
+}
