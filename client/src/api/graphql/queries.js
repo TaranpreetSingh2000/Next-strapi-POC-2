@@ -17,12 +17,18 @@ const GET_HOMEPAGE_DATA = gql`
         description
         title
         image {
-            url
-          }
-    
+          url
+        }
       }
     }
   }
 `;
 
-export { GET_HOMEPAGE_DATA };
+const CREATE_FORM_DATA = gql`
+  mutation CreateFaqForms($data: FaqFormInput!) {
+    createFaqForm(data: $data) {
+      name
+    }
+  }
+`;
+export { GET_HOMEPAGE_DATA, CREATE_FORM_DATA };

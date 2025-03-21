@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "faq_forms",
+  "info": {
+    "singularName": "faq-form",
+    "pluralName": "faq-forms",
+    "displayName": "faqForm",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "mobile": {
+      "type": "biginteger"
+    }
+  }
+}
