@@ -2,7 +2,7 @@ export default {
   register({ strapi }) {
     const extensionService = strapi.plugin("graphql").service("extension"); //The strapi.plugin('graphql').service('extension') method lets us extend the default GraphQL schema.
 
-    const extension = ({ nexus }) => ({
+    const extension = () => ({  // created the new mutation createFaqFormSecure to handle the validation and creation of the form submission.
       typeDefs: `
         type CreateFaqForms {
           success: Boolean
@@ -47,17 +47,27 @@ export default {
               const existingUser = await strapi.entityService.findMany(
                 "api::faq-form.faq-form",
                 {
-                  filters: { email },
+                  filters: {
+                    $or: [
+                      { email }, 
+                      { mobile }
+                    ]
+                  }
                 }
               );
-
+              
+              // Check if any user exists with the same email or mobile
               if (existingUser.length > 0) {
+                const isEmailExists = existingUser.some(user => user.email === email);
+              
                 return {
                   success: false,
-                  message: "User with this email already exists",
+                  message: isEmailExists 
+                    ? "User with this email already exists" 
+                    : "User with this mobile already exists"
                 };
               }
-
+              
               // Step 3: Convert mobile to string (to avoid BigInt issues)
               const inputData = {
                 ...args.data,
