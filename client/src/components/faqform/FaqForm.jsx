@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { CREATE_FORM_DATA } from "@/api/graphql/queries";
 import useForm from "@/hooks/useForm";
 import React, { useState } from "react";
@@ -17,15 +17,21 @@ const FaqForm = () => {
     }));
   };
 
-  const handleSubmit = async(e) => {
-    debugger; 
+  const handleSubmit = async (e) => {
+    debugger;
     e.preventDefault();
     console.log(formData);
-    const payload={
-        data: formData
+    const payload = {
+      data: formData,
+    };
+    try {
+      const { data } = await useForm(CREATE_FORM_DATA, payload);
+      console.log(data);
+      setFormData({ name: "", email: "", mobile: "" });
+      alert(data.createFaqFormSecure.message);
+    } catch (error) {
+      alert("Error while submitting the form", error);
     }
-    const {data}= await useForm(CREATE_FORM_DATA, payload);
-    console.log(data);
   };
 
   return (

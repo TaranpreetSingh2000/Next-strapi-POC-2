@@ -26,8 +26,9 @@ const GET_HOMEPAGE_DATA = gql`
 
 const CREATE_FORM_DATA = gql`
   mutation CreateFaqForms($data: FaqFormInput!) {
-    createFaqForm(data: $data) {
-      name
+    createFaqFormSecure(data: $data) {
+      success
+      message
     }
   }
 `;
