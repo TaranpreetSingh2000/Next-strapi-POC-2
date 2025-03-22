@@ -1,0 +1,22 @@
+{
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/auth/local",
+      "handler": "auth.callback",
+      "config": {
+        "policies": [],
+        "auth": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auth/refresh",
+      "handler": "auth.refreshToken",
+      "config": {
+        "policies": [],
+        "auth": false
+      }
+    }
+  ]
+}
