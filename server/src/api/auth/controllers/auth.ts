@@ -21,10 +21,10 @@ export default ({ strapi }) => ({
     }
 
     const jwtService = strapi.plugin('users-permissions').service('jwt');
-    const accessToken = jwtService.issue({ id: user.id }, { expiresIn: '5m' });
+    const accessToken = jwtService.issue({ id: user.id }, { expiresIn: '1m' });
 
     const refreshToken = randomBytes(32).toString('hex');
-    const refreshTokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
+    const refreshTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
     await strapi.entityService.create('api::refresh-token.refresh-token', {
       data: {
@@ -34,9 +34,19 @@ export default ({ strapi }) => ({
       },
     });
 
+    // Set JWT in an HTTP-only cookie
+    ctx.cookies.set('jwt', accessToken, {
+      httpOnly: true, // Prevents client-side JS access
+      secure: process.env.NODE_ENV === 'production', // Secure in production (HTTPS)
+      maxAge: 1 * 60 * 1000, // 5 minutes in milliseconds
+      sameSite: 'strict', // Prevents CSRF
+      path: '/',
+    });
+
     ctx.send({
-      jwt: accessToken,
-      refreshToken,
+      message: 'Login successful',
+        jwt: accessToken, // Send access token in response body
+      refreshToken, // Send refresh token in response body
       user,
     });
   },
@@ -62,13 +72,15 @@ export default ({ strapi }) => ({
     const user = tokenEntity[0].user;
 
     const jwtService = strapi.plugin('users-permissions').service('jwt');
-    const newAccessToken = jwtService.issue({ id: user.id }, { expiresIn: '5m' });
+    const newAccessToken = jwtService.issue({ id: user.id }, { expiresIn: '1m' });
 
     const newRefreshToken = randomBytes(32).toString('hex');
-    const newRefreshTokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
+    const newRefreshTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
+    // Delete old refresh token
     await strapi.entityService.delete('api::refresh-token.refresh-token', tokenEntity[0].id);
 
+    // Create new refresh token
     await strapi.entityService.create('api::refresh-token.refresh-token', {
       data: {
         token: newRefreshToken,
@@ -77,9 +89,19 @@ export default ({ strapi }) => ({
       },
     });
 
+    // Set new JWT in cookie
+    ctx.cookies.set('jwt', newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1 * 60 * 1000, // 5 minutes
+      sameSite: 'strict',
+      path: '/',
+    });
+
     ctx.send({
-      jwt: newAccessToken,
-      refreshToken: newRefreshToken,
+      message: 'Token refreshed',
+        jwt: newAccessToken, // Send new access token in response
+      refreshToken: newRefreshToken, // Send new refresh token in response
       user,
     });
   },

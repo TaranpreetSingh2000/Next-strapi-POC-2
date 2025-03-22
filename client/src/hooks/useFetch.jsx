@@ -9,7 +9,6 @@ const useFetch = async (query) => {
   } catch (error) {
     console.log("Error while executing the query", error);
   }
-
 };
 
 export default useFetch;
