@@ -1,5 +1,4 @@
 import client from "@/api/graphql/client";
-import React from "react";
 
 const useFetch = async (query) => {
   try {
@@ -11,7 +10,6 @@ const useFetch = async (query) => {
     console.log("Error while executing the query", error);
   }
 
-  console.log(data, "-->");
 };
 
 export default useFetch;

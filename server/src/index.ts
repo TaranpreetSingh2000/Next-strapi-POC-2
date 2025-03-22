@@ -58,7 +58,7 @@ export default {
               
               // Check if any user exists with the same email or mobile
               if (existingUser.length > 0) {
-                const isEmailExists = existingUser.some(user => user.email === email);
+                const isEmailExists = existingUser.some((user: { email: any; }) => user.email === email);
               
                 return {
                   success: false,
