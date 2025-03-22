@@ -1,4 +1,4 @@
-import Homepage from "@/app/pages/homepage/page";
+import Homepage from "@/app/pages/homepage/Homepage";
 
 export default function Home() {
   return(
