@@ -7,7 +7,7 @@ import { GET_HOMEPAGE_DATA } from "@/api/graphql/queries";
 import BannerTeaser from "@/components/bannerTeaser/BannerTeaser";
 import RevenueCards from "@/components/revenuecard/RevenueCards";
 import _ from "lodash";
-import useFetch from "@/hooks/useFetch"; // Your async function, not a hook
+import useFetch from "@/hooks/useFetch"; 
 import FaqForm from "@/components/faqform/FaqForm";
 import Link from "next/link";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -22,11 +22,10 @@ const Homepage = () => {
   );
   const [homepageData, setHomepageData] = useState(null);
 
-  // Fetch data using useFetch with async/await
   useEffect(() => {
     const fetchHomepageData = async () => {
       try {
-        const result = await useFetch(GET_HOMEPAGE_DATA); // Your async useFetch
+        const result = await useFetch(GET_HOMEPAGE_DATA);
         setHomepageData(_.get(result, "data.homepage", {}));
       } catch (err) {
         console.log("Error fetching homepage data:", err);
@@ -35,7 +34,6 @@ const Homepage = () => {
     fetchHomepageData();
   }, []);
 
-  // Token refresh logic
   useEffect(() => {
     let intervalId = null;
 
@@ -71,9 +69,11 @@ const Homepage = () => {
     }
 
     const currentTime = Date.now();
+    console.log(storedExpiryTime,'--> store', currentTime,'--> current')
     const timeLeft = parseInt(storedExpiryTime) - currentTime;
     const refreshThreshold = 10000;
 
+    console.log(timeLeft,'-->')
     console.log(`Time left: ${timeLeft / 1000}s`);
 
     if (timeLeft <= refreshThreshold && timeLeft > 0) {
