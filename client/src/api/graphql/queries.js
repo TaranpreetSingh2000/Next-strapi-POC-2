@@ -32,4 +32,6 @@ const CREATE_FORM_DATA = gql`
     }
   }
 `;
+
+
 export { GET_HOMEPAGE_DATA, CREATE_FORM_DATA };

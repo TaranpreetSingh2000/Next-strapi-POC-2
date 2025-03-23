@@ -430,31 +430,39 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
   };
 }
 
-export interface ApiSuccessSuccess extends Struct.CollectionTypeSchema {
-  collectionName: 'successes';
+export interface ApiRefreshTokenRefreshToken
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'refresh_tokens';
   info: {
-    displayName: 'success';
-    pluralName: 'successes';
-    singularName: 'success';
+    displayName: 'RefreshToken';
+    pluralName: 'refresh-tokens';
+    singularName: 'refresh-token';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    expiresAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::success.success'
+      'api::refresh-token.refresh-token'
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    success: Schema.Attribute.String;
+    token: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -969,7 +977,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::faq-form.faq-form': ApiFaqFormFaqForm;
       'api::homepage.homepage': ApiHomepageHomepage;
-      'api::success.success': ApiSuccessSuccess;
+      'api::refresh-token.refresh-token': ApiRefreshTokenRefreshToken;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

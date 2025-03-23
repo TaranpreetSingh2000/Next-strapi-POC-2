@@ -1,7 +1,6 @@
 import React from "react";
 
 const BannerTeaser = ({ homedata, overlayTeaser }) => {
-  console.log(homedata);
   const endPointUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
 
   return (
