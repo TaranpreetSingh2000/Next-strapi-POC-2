@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { GET_HOMEPAGE_DATA } from "@/api/graphql/queries";
 import BannerTeaser from "@/components/bannerTeaser/BannerTeaser";
-// import RevenueCards from "@/components/revenuecard/RevenueCards";
+import RevenueCards from "@/components/revenuecard/RevenueCards";
 import _ from "lodash";
 import useFetch from "@/hooks/useFetch";
 import FaqForm from "@/components/faqform/FaqForm";
@@ -20,8 +20,9 @@ const Homepage = () => {
   useEffect(() => {
     const fetchHomepageData = async () => {
       try {
-        const result = await useFetch(GET_HOMEPAGE_DATA);
-        setHomepageData(_.get(result, "data.homepage", {}));
+        const { data } = await useFetch(GET_HOMEPAGE_DATA);
+        console.log(data.homepage);
+        setHomepageData(data.homepage);
       } catch (err) {
         console.log("Error fetching homepage data:", err);
       }
@@ -29,17 +30,17 @@ const Homepage = () => {
     fetchHomepageData();
   }, []);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      console.log("Checking token expiry...");
-      checkTokenExpiry();
-    }, 5000);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     console.log("Checking token expiry...");
+  //     checkTokenExpiry();
+  //   }, 5000);
 
-    return () => {
-      console.log("Cleaning up interval...");
-      clearInterval(intervalId);
-    };
-  }, [storedRefreshToken]);
+  //   return () => {
+  //     console.log("Cleaning up interval...");
+  //     clearInterval(intervalId);
+  //   };
+  // }, [storedRefreshToken]);
 
   const checkTokenExpiry = async () => {
     const accessToken = Cookies.get("accessToken");
@@ -132,7 +133,7 @@ const Homepage = () => {
       Cookies.remove("refreshToken");
       localStorage.removeItem("tokenExpiryTime");
       router.push("/login");
-      alert(data.message); 
+      alert(data.message);
     } catch (error) {
       console.log("Logout error:", error);
       Cookies.remove("accessToken");
@@ -142,41 +143,44 @@ const Homepage = () => {
   };
 
   return (
-    <ProtectedRoute>
-      <div className="w-full h-full p-6 space-y-6 bg-gray-100 min-h-screen">
-        {/* Header Section */}
-        <div className="flex justify-between items-center bg-white shadow-md p-4 rounded-lg">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Welcome to the Homepage
-          </h1>
-          {isAuthenticated ? (
-            <button
-              onClick={handleLogout}
-              className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-            >
-              Logout
-            </button>
-          ) : (
-            <Link
-              href="/login"
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-            >
-              Login
-            </Link>
-          )}
-        </div>
-
-        {/* Banner Section */}
-        <div className="rounded-lg shadow-lg overflow-hidden bg-white p-4">
-          <BannerTeaser homedata={homepageData} overlayTeaser={true} />
-        </div>
-
-        {/* FAQ Section */}
-        <div className="rounded-lg shadow-lg overflow-hidden bg-white p-4">
-          <FaqForm />
-        </div>
+    // <ProtectedRoute>
+    <div className="w-full h-full p-6 space-y-6 bg-gray-100 min-h-screen">
+      {/* Header Section */}
+      <div className="flex justify-between items-center bg-white shadow-md p-4 rounded-lg">
+        <h1 className="text-2xl font-bold text-gray-800">
+          Welcome to the Homepage
+        </h1>
+        {isAuthenticated ? (
+          <button
+            onClick={handleLogout}
+            className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+          >
+            Logout
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+          >
+            Login
+          </Link>
+        )}
       </div>
-    </ProtectedRoute>
+
+      {/* Banner Section */}
+      <div className="rounded-lg shadow-lg overflow-hidden bg-white p-4">
+        <BannerTeaser homedata={homepageData} overlayTeaser={true} />
+      </div>
+      <div className="rounded-lg shadow-lg overflow-hidden bg-white p-4">
+        <RevenueCards revenuedata={homepageData?.Revenue} />
+      </div>
+
+      {/* FAQ Section */}
+      <div className="rounded-lg shadow-lg overflow-hidden bg-white p-4">
+        <FaqForm />
+      </div>
+    </div>
+    // </ProtectedRoute>
   );
 };
 
