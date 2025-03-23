@@ -7,9 +7,15 @@ export default {
       config: { policies: [], auth: false },
     },
     {
-      method: 'POST',
+      method: 'GET',
       path: '/auth/refresh',
       handler: 'auth.refresh',
+      config: { policies: [], auth: false },
+    },
+    {
+      method: 'POST',
+      path: '/auth/logout',
+      handler: 'auth.logout',
       config: { policies: [], auth: false },
     },
     {

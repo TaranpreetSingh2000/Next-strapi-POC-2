@@ -9,12 +9,11 @@ export default ({ strapi }) => ({
 
     console.log('login called--->', identifier, password);
 
-    // Use entityService to find the user by email
     const userEntities = await strapi.entityService.findMany('plugin::users-permissions.user', {
       filters: { email: identifier },
     });
 
-    const user = userEntities[0]; // Take the first match
+    const user = userEntities[0];
 
     if (!user || !(await strapi.plugin('users-permissions').service('user').validatePassword(password, user.password))) {
       return ctx.badRequest('Invalid credentials');
@@ -22,9 +21,8 @@ export default ({ strapi }) => ({
 
     const jwtService = strapi.plugin('users-permissions').service('jwt');
     const accessToken = jwtService.issue({ id: user.id }, { expiresIn: '1m' });
-
     const refreshToken = randomBytes(32).toString('hex');
-    const refreshTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    const refreshTokenExpiry = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
 
     await strapi.entityService.create('api::refresh-token.refresh-token', {
       data: {
@@ -34,25 +32,34 @@ export default ({ strapi }) => ({
       },
     });
 
-    // Set JWT in an HTTP-only cookie
-    ctx.cookies.set('jwt', accessToken, {
-      httpOnly: true, // Prevents client-side JS access
-      secure: process.env.NODE_ENV === 'production', // Secure in production (HTTPS)
-      maxAge: 1 * 60 * 1000, // 5 minutes in milliseconds
-      sameSite: 'strict', // Prevents CSRF
+    ctx.cookies.set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: false, // Set to false for local dev (HTTP)
+      maxAge: 1 * 60 * 1000, // 1 minute
+      sameSite: 'lax', // Allow cross-origin requests
       path: '/',
     });
 
+    // Set both tokens in HTTP-only cookies
+    ctx.cookies.set('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: false, // Set to false for local dev (HTTP)
+      maxAge: 2 * 60 * 1000, // 2 minutes
+      sameSite: 'lax', // Allow cross-origin requests
+      path: '/',
+    });
+    
+
     ctx.send({
       message: 'Login successful',
-        jwt: accessToken, // Send access token in response body
-      refreshToken, // Send refresh token in response body
       user,
+      jwt: accessToken,
+      refreshToken
     });
   },
 
-  async refresh(ctx) {
-    const { refreshToken } = ctx.request.body;
+  async refresh(ctx:any) {
+    const refreshToken = ctx.cookies.get('refreshToken');
 
     console.log('refresh called', refreshToken);
 
@@ -66,46 +73,56 @@ export default ({ strapi }) => ({
     });
 
     if (!tokenEntity.length || new Date(tokenEntity[0].expiresAt) < new Date()) {
-      return ctx.badRequest('Invalid or expired refresh token');
+      // Clear cookies when refresh token is invalid or expired
+      ctx.cookies.set('accessToken', null, { maxAge: 0 });
+      ctx.cookies.set('refreshToken', null, { maxAge: 0 });
+      return ctx.badRequest('Refresh token invalid or expired. Please login again.');
     }
 
     const user = tokenEntity[0].user;
-
     const jwtService = strapi.plugin('users-permissions').service('jwt');
     const newAccessToken = jwtService.issue({ id: user.id }, { expiresIn: '1m' });
 
-    const newRefreshToken = randomBytes(32).toString('hex');
-    const newRefreshTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-
-    // Delete old refresh token
-    await strapi.entityService.delete('api::refresh-token.refresh-token', tokenEntity[0].id);
-
-    // Create new refresh token
-    await strapi.entityService.create('api::refresh-token.refresh-token', {
-      data: {
-        token: newRefreshToken,
-        user: user.id,
-        expiresAt: newRefreshTokenExpiry,
-      },
-    });
-
-    // Set new JWT in cookie
-    ctx.cookies.set('jwt', newAccessToken, {
+    // Only generate new access token, keep existing refresh token
+    ctx.cookies.set('accessToken', newAccessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 1 * 60 * 1000, // 5 minutes
-      sameSite: 'strict',
+      secure: false, // Set to false for local dev (HTTP)
+      // secure: process.env.NODE_ENV === 'production',
+      maxAge: 1 * 60 * 1000, // 1 minute
+      // sameSite: 'strict',
       path: '/',
     });
 
     ctx.send({
       message: 'Token refreshed',
-        jwt: newAccessToken, // Send new access token in response
-      refreshToken: newRefreshToken, // Send new refresh token in response
       user,
+      jwt: newAccessToken,
     });
   },
 
+  async logout(ctx) {
+    // Clear both cookies
+    console.log('logout called', ctx.cookies.get('accessToken'), ctx.cookies.get('refreshToken'));
+    ctx.cookies.set('accessToken', null, { maxAge: 0 });
+    ctx.cookies.set('refreshToken', null, { maxAge: 0 });
+    
+    // Optional: Delete refresh token from database
+    const refreshToken = ctx.cookies.get('refreshToken');
+    if (refreshToken) {
+      const tokenEntity = await strapi.entityService.findMany('api::refresh-token.refresh-token', {
+        filters: { token: refreshToken },
+      });
+      if (tokenEntity.length) {
+        await strapi.entityService.delete('api::refresh-token.refresh-token', tokenEntity[0].id);
+      }
+    }
+
+    ctx.send({
+      message: 'Logged out successfully',
+    });
+  },
+
+  // Keep other methods as they were
   async register(ctx) {
     console.log('register called');
     return ctx.badRequest('Registration not implemented in custom controller');

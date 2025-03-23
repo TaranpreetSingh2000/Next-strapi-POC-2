@@ -10,6 +10,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
+    debugger;
     e.preventDefault();
     try {
       const response = await fetch("http://localhost:1337/api/auth/login", {
@@ -21,26 +22,42 @@ export default function Login() {
       });
 
       const data = await response.json();
-      if (data.jwt && data.refreshToken) {
+      if (response.ok && data.jwt && data.refreshToken) {
         saveTokens(data.jwt, data.refreshToken);
+        console.log("Login successful, tokens stored in cookies");
         router.push("/");
+        alert(data.message);
+      } else {
+        alert(data.message || "Invalid credentials, please try again.");
       }
     } catch (error) {
       console.log("An error occurred", error);
+      alert("Something went wrong. Please try again later.");
     }
   };
 
-  const saveTokens = (accessToken, newRefreshToken) => {
-    const expiresIn = 60; 
-    const expiryTime = Date.now() + expiresIn * 1000;
+  const saveTokens = (accessToken, refreshToken) => {
+    const expiryTime = Date.now() + 60 * 1000;
+    Cookies.set("accessToken", accessToken, {
+      path: "/",
+      expires: 1 / 1440,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
 
-    Cookies.set("accessToken", accessToken, { path: "/", expires: 1 / 1440 });
-    localStorage.setItem("refreshToken", newRefreshToken);
+    Cookies.set("refreshToken", refreshToken, {
+      path: "/",
+      expires: 5 / 1440,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
     localStorage.setItem("tokenExpiryTime", expiryTime.toString());
-    
-    console.log("Tokens saved, expires at:", new Date(expiryTime));
-  };
 
+    console.log(
+      "Tokens saved in cookies, access expires in 1 min, refresh in 2 min"
+    );
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

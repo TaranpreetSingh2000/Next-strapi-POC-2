@@ -26,6 +26,12 @@ export default (plugin: { strapi: Core.Strapi; controllers: any; routes: any }) 
       },
       {
         method: 'POST',
+        path: '/auth/logout',
+        handler: 'auth.logout',
+        config: { policies: [], auth: false },
+      },
+      {
+        method: 'POST',
         path: '/auth/local/register',
         handler: 'auth.register',
         config: { policies: [], auth: false },
