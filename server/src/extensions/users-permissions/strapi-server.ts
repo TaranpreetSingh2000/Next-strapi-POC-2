@@ -1,3 +1,4 @@
+// src/users-permissions/strapi-sever.js
 import type { Core } from '@strapi/strapi';
 import Auth from './controllers/auth';
 

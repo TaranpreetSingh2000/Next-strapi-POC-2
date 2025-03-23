@@ -1,3 +1,4 @@
+//  api/auth/controllers/auth.ts
 import jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 

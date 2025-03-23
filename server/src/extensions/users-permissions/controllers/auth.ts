@@ -1,3 +1,5 @@
+// src/users-permissions/controllers/auth.ts
+
 import jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 
