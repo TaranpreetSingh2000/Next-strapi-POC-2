@@ -47,7 +47,7 @@ export default function Login() {
 
     Cookies.set("refreshToken", refreshToken, {
       path: "/",
-      expires: 5 / 1440,
+      expires: 2 / 1440,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
