@@ -1,6 +1,6 @@
 "use client";
 import { CREATE_FORM_DATA } from "@/api/graphql/queries";
-import useForm from "@/hooks/useForm";
+import executeMutation from "@/utils/constants";
 import React, { useState } from "react";
 
 const FaqForm = () => {
@@ -25,17 +25,20 @@ const FaqForm = () => {
       data: formData,
     };
     try {
-      const { data } = await useForm(CREATE_FORM_DATA, payload);
+      const { data } = await executeMutation(
+        CREATE_FORM_DATA,
+        payload,
+      );
       console.log(data);
+      alert(data?.createFaqFormSecure.message);
       setFormData({ name: "", email: "", mobile: "" });
-      alert(data.createFaqFormSecure.message);
     } catch (error) {
       alert("Error while submitting the form", error);
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div className="w-full max-w-md mx-auto p-6 rounded-lg">
       <h2 className="text-2xl font-semibold text-center mb-4">FAQ Form</h2>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>

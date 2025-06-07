@@ -17,6 +17,8 @@ export default ({ strapi }) => ({
       }
     );
 
+    console.log(userEntities, "--> user Entities");
+
     const user = userEntities[0];
 
     if (
@@ -153,7 +155,7 @@ export default ({ strapi }) => ({
   },
 
   // Keep other methods as they were
-  async register(ctx:any) {
+  async register(ctx: any) {
     const { email, username, password } = ctx.request.body;
 
     console.log("register called--->", email, username, password);

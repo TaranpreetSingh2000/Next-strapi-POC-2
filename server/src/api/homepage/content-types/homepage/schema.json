@@ -20,6 +20,9 @@
       "type": "component",
       "repeatable": true,
       "component": "revenue.revenue"
+    },
+    "richtext": {
+      "type": "richtext"
     }
   }
 }

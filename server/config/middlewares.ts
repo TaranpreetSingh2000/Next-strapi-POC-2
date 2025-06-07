@@ -5,7 +5,7 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      origin: ['http://localhost:3000'], // Your frontend URL
+      // origin: ['http://localhost:3001'], // Your frontend URL
       credentials: true, // Allow cookies to be sent
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization'],

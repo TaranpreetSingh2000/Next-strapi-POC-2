@@ -1,0 +1,33 @@
+{
+  "kind": "singleType",
+  "collectionName": "articlesbs",
+  "info": {
+    "singularName": "articlesb",
+    "pluralName": "articlesbs",
+    "displayName": "Articlesb",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "sites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::site.site"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "file": {
+      "allowedTypes": [
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "kind": "singleType",
+  "collectionName": "articles",
+  "info": {
+    "singularName": "article",
+    "pluralName": "articles",
+    "displayName": "Articles",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "sites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::site.site"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "list": {
+      "type": "customField",
+      "default": "[\"value-2-24\"]",
+      "options": [
+        "1-14",
+        "2-24",
+        "3-34"
+      ],
+      "customField": "plugin::multi-select.multi-select",
+      "max": 1,
+      "required": true
+    }
+  }
+}

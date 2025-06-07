@@ -13,13 +13,15 @@ export default function Login() {
     debugger;
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:1337/api/auth/login", {
+      const response = await fetch("http://localhost:1336/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ identifier: email, password }),
       });
+
+      debugger
 
       const data = await response.json();
       if (response.ok && data.jwt && data.refreshToken) {

@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "recommended_questions",
+  "info": {
+    "singularName": "recommended-question",
+    "pluralName": "recommended-questions",
+    "displayName": "Recommended Questions ",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "displayName": {
+      "type": "string"
+    },
+    "products_recommendation_engines": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::products-recommendation-engine.products-recommendation-engine",
+      "inversedBy": "recommended_questions"
+    }
+  }
+}

@@ -17,18 +17,18 @@ const Homepage = () => {
   const router = useRouter();
   const [homepageData, setHomepageData] = useState(null);
 
-  useEffect(() => {
-    const fetchHomepageData = async () => {
-      try {
-        const { data } = await useFetch(GET_HOMEPAGE_DATA);
-        console.log(data.homepage);
-        setHomepageData(data.homepage);
-      } catch (err) {
-        console.log("Error fetching homepage data:", err);
-      }
-    };
-    fetchHomepageData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchHomepageData = async () => {
+  //     try {
+  //       const { data } = await useFetch(GET_HOMEPAGE_DATA);
+  //       console.log(data.homepage);
+  //       setHomepageData(data.homepage);
+  //     } catch (err) {
+  //       console.log("Error fetching homepage data:", err);
+  //     }
+  //   };
+  //   fetchHomepageData();
+  // }, []);
 
   // useEffect(() => {
   //   const intervalId = setInterval(() => {

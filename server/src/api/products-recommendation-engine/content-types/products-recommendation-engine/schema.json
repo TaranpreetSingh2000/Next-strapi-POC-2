@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products_recommendation_engines",
+  "info": {
+    "singularName": "products-recommendation-engine",
+    "pluralName": "products-recommendation-engines",
+    "displayName": "Products Recommendation Engine",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "ageGroup": {
+      "type": "customField",
+      "options": [
+        "10-20",
+        "25-30",
+        "35-40",
+        "40-50"
+      ],
+      "customField": "plugin::multi-select.multi-select",
+      "min": 0,
+      "max": 1
+    },
+    "gender": {
+      "type": "customField",
+      "options": [
+        "male",
+        "female",
+        "others"
+      ],
+      "customField": "plugin::multi-select.multi-select",
+      "min": 0,
+      "max": 1
+    },
+    "employmentStatus": {
+      "type": "customField",
+      "options": [
+        "Salaried",
+        "Unemployed",
+        "Employed"
+      ],
+      "customField": "plugin::multi-select.multi-select",
+      "min": 0,
+      "max": 1
+    },
+    "recommended_questions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::recommended-question.recommended-question",
+      "mappedBy": "products_recommendation_engines"
+    }
+  }
+}

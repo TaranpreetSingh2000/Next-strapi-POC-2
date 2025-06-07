@@ -3,23 +3,7 @@ import { gql } from "@apollo/client";
 const GET_HOMEPAGE_DATA = gql`
   query Homepage {
     homepage {
-      BannerTeaser {
-        heading
-        bannerImg {
-          url
-        }
-        description
-        buttontext
-      }
-      Revenue {
-        suptext
-        tagline
-        description
-        title
-        image {
-          url
-        }
-      }
+      richtext
     }
   }
 `;
@@ -32,6 +16,5 @@ const CREATE_FORM_DATA = gql`
     }
   }
 `;
-
 
 export { GET_HOMEPAGE_DATA, CREATE_FORM_DATA };
