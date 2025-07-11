@@ -11,18 +11,34 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "BannerTeaser": {
-      "type": "component",
-      "repeatable": true,
-      "component": "banner.banner"
-    },
-    "Revenue": {
-      "type": "component",
-      "repeatable": true,
-      "component": "revenue.revenue"
-    },
     "richtext": {
       "type": "richtext"
+    },
+    "text": {
+      "type": "text"
+    },
+    "color": {
+      "type": "customField",
+      "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+      "customField": "plugin::color-picker.color"
+    },
+    "faqAccordionVariant": {
+      "type": "enumeration",
+      "enum": [
+        "grid",
+        "normal"
+      ],
+      "default": "normal"
+    },
+    "variant1": {
+      "type": "string"
+    },
+    "variant2": {
+      "type": "blocks"
+    },
+    "date": {
+      "type": "customField",
+      "customField": "plugin::multi-date-picker.multiDatePicker"
     }
   }
 }

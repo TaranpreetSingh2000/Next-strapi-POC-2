@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "recommended_products",
+  "info": {
+    "singularName": "recommended-product",
+    "pluralName": "recommended-products",
+    "displayName": "Recommended Products",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "productName": {
+      "type": "string",
+      "unique": true
+    },
+    "productLink": {
+      "type": "string"
+    },
+    "openInNewTab": {
+      "type": "boolean",
+      "default": false
+    },
+    "recommended_questions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::recommended-question.recommended-question",
+      "mappedBy": "recommended_products"
+    }
+  }
+}

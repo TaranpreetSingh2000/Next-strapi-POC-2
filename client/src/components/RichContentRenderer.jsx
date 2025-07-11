@@ -5,17 +5,20 @@ import he from "he";
 import UniversalHtmlRenderer from "./UniversalHtmlRenderer";
 
 export default function RichContentRenderer({ content }) {
-  // const decoded = he.decode(content);
-  // const sanitized = DOMPurify.sanitize(decoded, {
-  //   USE_PROFILES: { html: true },
-  // });
+  const decodeAndSanitize = (input = "") => {
+    const decoded = he.decode(input);
+    return DOMPurify.sanitize(decoded, {
+      USE_PROFILES: { html: true },
+    });
+  };
 
-  debugger;
+  const sanitizedRichtext = content.richtext ? decodeAndSanitize(content.richtext) : null;
+  const sanitizedText = content.text ? decodeAndSanitize(content.text) : null;
+
   return (
-    // <div
-    //   className="prose max-w-none"
-    //   dangerouslySetInnerHTML={{ __html: sanitized }}
-    // />
-    <UniversalHtmlRenderer html={content} />
+    <>
+      {sanitizedRichtext && <UniversalHtmlRenderer html={sanitizedRichtext} />}
+      {sanitizedText && <UniversalHtmlRenderer html={sanitizedText} />}
+    </>
   );
 }

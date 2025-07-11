@@ -1,5 +1,16 @@
 export default {
   register({ strapi }) {
+    module.exports = {
+      async bootstrap({ strapi }) {
+        await strapi.admin.services.permission.conditionProvider.register({
+          displayName: "Is Admin",
+          name: "is-admin",
+          handler(user) {
+            return user.role.name === "Administrator";
+          },
+        });
+      },
+    };
     const extensionService = strapi.plugin("graphql").service("extension");
 
     const getDistinctFieldValues = async (fieldName: string) => {

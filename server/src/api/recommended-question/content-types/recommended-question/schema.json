@@ -12,12 +12,19 @@
   },
   "attributes": {
     "displayName": {
-      "type": "string"
+      "type": "string",
+      "unique": true
     },
     "products_recommendation_engines": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::products-recommendation-engine.products-recommendation-engine",
+      "inversedBy": "recommended_questions"
+    },
+    "recommended_products": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::recommended-product.recommended-product",
       "inversedBy": "recommended_questions"
     }
   }

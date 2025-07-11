@@ -23,11 +23,15 @@
       "type": "text"
     },
     "file": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "files"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "seo": {
+      "type": "string"
     }
   }
 }

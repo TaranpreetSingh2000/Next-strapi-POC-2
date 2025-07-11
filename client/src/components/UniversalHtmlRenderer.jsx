@@ -3,7 +3,6 @@ import parse, { domToReact } from "html-react-parser";
 
 // Helper to convert "style" string into React-style object
 function parseStyleString(styleString) {
-    debugger
   const style = {};
   styleString.split(";").forEach((rule) => {
     const [key, value] = rule.split(":");
@@ -111,7 +110,7 @@ const voidElements = [
 ];
 
 const UniversalHtmlRenderer = ({ html }) => {
-    debugger
+  
   const options = {
     replace: (domNode) => {
       if (domNode.type === "tag") {
@@ -139,6 +138,22 @@ const UniversalHtmlRenderer = ({ html }) => {
         }
 
         return <Tag {...props}>{domToReact(children, options)}</Tag>; // parse the dom nodes children
+      }
+      if (domNode.type === "text") {
+        const text = domNode.data.trim();
+        const imageRegex = /(https?:\/\/[^\s]+?\.(avif|png|jpe?g|svg|webp))/i;
+
+        const match = text.match(imageRegex);
+        if (match) {
+          const imageUrl = match[1];
+          return (
+            <img
+              src={imageUrl}
+              alt="auto-detected"
+              className={tagClasses["img"] || ""}
+            />
+          );
+        }
       }
     },
   };

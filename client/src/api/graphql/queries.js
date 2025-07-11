@@ -4,6 +4,8 @@ const GET_HOMEPAGE_DATA = gql`
   query Homepage {
     homepage {
       richtext
+      text
+      variant2
     }
   }
 `;

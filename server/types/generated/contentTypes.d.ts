@@ -437,6 +437,7 @@ export interface ApiArticlesbArticlesb extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    seo: Schema.Attribute.String;
     sites: Schema.Attribute.Relation<'oneToMany', 'api::site.site'>;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -488,10 +489,15 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    BannerTeaser: Schema.Attribute.Component<'banner.banner', true>;
+    color: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::color-picker.color'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    date: Schema.Attribute.JSON &
+      Schema.Attribute.CustomField<'plugin::multi-date-picker.multiDatePicker'>;
+    faqAccordionVariant: Schema.Attribute.Enumeration<['grid', 'normal']> &
+      Schema.Attribute.DefaultTo<'normal'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -499,11 +505,13 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    Revenue: Schema.Attribute.Component<'revenue.revenue', true>;
     richtext: Schema.Attribute.RichText;
+    text: Schema.Attribute.Text;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    variant1: Schema.Attribute.String;
+    variant2: Schema.Attribute.Blocks;
   };
 }
 
@@ -576,6 +584,42 @@ export interface ApiProductsRecommendationEngineProductsRecommendationEngine
   };
 }
 
+export interface ApiRecommendedProductRecommendedProduct
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'recommended_products';
+  info: {
+    description: '';
+    displayName: 'Recommended Products';
+    pluralName: 'recommended-products';
+    singularName: 'recommended-product';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::recommended-product.recommended-product'
+    > &
+      Schema.Attribute.Private;
+    openInNewTab: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    productLink: Schema.Attribute.String;
+    productName: Schema.Attribute.String & Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    recommended_questions: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::recommended-question.recommended-question'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiRecommendedQuestionRecommendedQuestion
   extends Struct.CollectionTypeSchema {
   collectionName: 'recommended_questions';
@@ -592,7 +636,7 @@ export interface ApiRecommendedQuestionRecommendedQuestion
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    displayName: Schema.Attribute.String;
+    displayName: Schema.Attribute.String & Schema.Attribute.Unique;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -604,6 +648,10 @@ export interface ApiRecommendedQuestionRecommendedQuestion
       'api::products-recommendation-engine.products-recommendation-engine'
     >;
     publishedAt: Schema.Attribute.DateTime;
+    recommended_products: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::recommended-product.recommended-product'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -661,10 +709,14 @@ export interface ApiSiteSite extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    list: Schema.Attribute.Enumeration<['a.10-20', 'b,20-30']>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::site.site'> &
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
+    productEngine: Schema.Attribute.Enumeration<
+      ['a10-20', 'b20-30', 'b30-40', 'c-30-40']
+    >;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'>;
     updatedAt: Schema.Attribute.DateTime;
@@ -1187,6 +1239,7 @@ declare module '@strapi/strapi' {
       'api::faq-form.faq-form': ApiFaqFormFaqForm;
       'api::homepage.homepage': ApiHomepageHomepage;
       'api::products-recommendation-engine.products-recommendation-engine': ApiProductsRecommendationEngineProductsRecommendationEngine;
+      'api::recommended-product.recommended-product': ApiRecommendedProductRecommendedProduct;
       'api::recommended-question.recommended-question': ApiRecommendedQuestionRecommendedQuestion;
       'api::refresh-token.refresh-token': ApiRefreshTokenRefreshToken;
       'api::site.site': ApiSiteSite;

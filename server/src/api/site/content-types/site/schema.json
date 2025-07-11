@@ -17,6 +17,22 @@
     "slug": {
       "type": "uid",
       "targetField": "name"
+    },
+    "list": {
+      "type": "enumeration",
+      "enum": [
+        "a.10-20",
+        "b,20-30"
+      ]
+    },
+    "productEngine": {
+      "type": "enumeration",
+      "enum": [
+        "a10-20",
+        "b20-30",
+        "b30-40",
+        "c-30-40"
+      ]
     }
   }
 }
